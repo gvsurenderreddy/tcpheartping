@@ -5,12 +5,21 @@ import (
     "net"
     "bufio"
     "time"
+    "os"
 )
 
 func main() {
+    args := os.Args[1:]
+    argslen := len(args)
+    if argslen < 2 {
+        fmt.Println("tcpheartping   127.0.0.1 8080")
+        os.Exit(0)
+    }
+    host := args[0]
+    port := args[1]
     longpoll := 1
     for longpoll == 1  {
-        conn, err := net.Dial("tcp", "127.0.0.1:9070")
+        conn, err := net.Dial("tcp", fmt.Sprintf("%s:%s", host, port))
         if err != nil {
             fmt.Println("Service not available")
             time.Sleep(10*time.Second)
