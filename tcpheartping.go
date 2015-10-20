@@ -2,9 +2,11 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"net"
 	"os"
+	"os/exec"
 	"time"
 )
 
@@ -22,7 +24,14 @@ func main() {
 		conn, err := net.Dial("tcp", fmt.Sprintf("%s:%s", host, port))
 		if err != nil {
 			fmt.Println("Service not available")
-			time.Sleep(10 * time.Second)
+			cmd := exec.Command("supervisorctl", "reload")
+			var out bytes.Buffer
+			cmd.Stdout = &out
+			err := cmd.Run()
+			if err != nil {
+				fmt.Println(err)
+			}
+			fmt.Printf("Finished: %q\n", out.String())
 			continue
 		} else {
 			fmt.Fprintf(conn, "GET /\r\n\r\n")
@@ -33,6 +42,6 @@ func main() {
 			}
 			fmt.Println("ok")
 		}
-		time.Sleep(10 * time.Second)
+		time.Sleep(5 * time.Second)
 	}
 }
