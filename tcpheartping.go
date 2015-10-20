@@ -24,13 +24,14 @@ func main() {
 		conn, err := net.Dial("tcp", fmt.Sprintf("%s:%s", host, port))
 		if err != nil {
 			fmt.Println("Service not available")
-			cmd := exec.Command("supervisorctl", "reload")
+			cmd := exec.Command("supervisorctl", "restart", "ssh")
 			var out bytes.Buffer
 			cmd.Stdout = &out
 			err := cmd.Run()
 			if err != nil {
 				fmt.Println(err)
 			}
+			time.Sleep(3 * time.Second) //Sleep 3 seconds for service restart
 			fmt.Printf("Finished: %q\n", out.String())
 			continue
 		} else {
