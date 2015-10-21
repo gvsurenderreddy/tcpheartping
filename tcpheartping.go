@@ -21,7 +21,7 @@ func main() {
 	port := args[1]
 	longpoll := 1
 	for longpoll == 1 {
-		conn, err := net.Dial("tcp", fmt.Sprintf("%s:%s", host, port))
+		conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%s", host, port), time.Second)
 		if err != nil {
 			fmt.Println("Service not available, Try to restart ssh service")
 			cmd := exec.Command("supervisorctl", "restart", "ssh")
