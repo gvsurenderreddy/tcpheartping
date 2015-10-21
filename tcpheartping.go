@@ -22,27 +22,33 @@ func main() {
 	longpoll := 1
 	for longpoll == 1 {
 		conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%s", host, port), time.Second)
+		conn.SetDeadline(time.Now().Add(time.Second * 15))
 		if err != nil {
 			fmt.Println("Service not available, Try to restart ssh service")
-			cmd := exec.Command("supervisorctl", "restart", "ssh")
-			var out bytes.Buffer
-			cmd.Stdout = &out
-			err := cmd.Run()
-			if err != nil {
-				fmt.Println(err)
-			}
-			time.Sleep(3 * time.Second) //Sleep 3 seconds for service restart
-			fmt.Printf("Finished: %q\n", out.String())
-			continue
+			restartService()
 		} else {
 			fmt.Fprintf(conn, "GET /\r\n\r\n")
 			status, err := bufio.NewReader(conn).ReadString('\n')
 			fmt.Println(status)
 			if err != nil {
 				fmt.Println(err)
+				restartService()
 			}
 			fmt.Println("ok")
 		}
 		time.Sleep(5 * time.Second)
 	}
+}
+
+func restartService() {
+	cmd := exec.Command("supervisorctl", "restart", "ssh")
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	err := cmd.Run()
+	if err != nil {
+		fmt.Println(err)
+	}
+	time.Sleep(3 * time.Second) //Sleep 3 seconds for service restart
+	fmt.Printf("Finished: %q\n", out.String())
+
 }
