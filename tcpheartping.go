@@ -22,7 +22,7 @@ func main() {
 	longpoll := 1
 	for longpoll == 1 {
 		conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%s", host, port), time.Second)
-		conn.SetDeadline(time.Now().Add(time.Second * 15))
+		conn.SetDeadline(time.Now().Add(time.Second * 3))
 		if err != nil {
 			fmt.Println("Service not available, Try to restart ssh service")
 			restartService()
@@ -41,7 +41,7 @@ func main() {
 }
 
 func restartService() {
-	cmd := exec.Command("supervisorctl", "restart", "ssh")
+	cmd := exec.Command("systemctl", "restart", "sshpx")
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	err := cmd.Run()
