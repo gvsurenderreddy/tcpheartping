@@ -36,7 +36,7 @@ func main() {
 			}
 			fmt.Println("ok")
 		}
-		time.Sleep(5 * time.Second)
+		time.Sleep(3 * time.Second)
 	}
 }
 
