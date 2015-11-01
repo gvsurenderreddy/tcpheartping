@@ -22,11 +22,11 @@ func main() {
 	longpoll := 1
 	for longpoll == 1 {
 		conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%s", host, port), time.Second)
-		conn.SetDeadline(time.Now().Add(time.Second * 3))
 		if err != nil {
 			fmt.Println("Service not available, Try to restart ssh service")
 			restartService()
 		} else {
+			conn.SetDeadline(time.Now().Add(time.Second * 3))
 			fmt.Fprintf(conn, "GET /\r\n\r\n")
 			status, err := bufio.NewReader(conn).ReadString('\n')
 			fmt.Println(status)
