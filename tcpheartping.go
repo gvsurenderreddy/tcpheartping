@@ -26,7 +26,7 @@ func main() {
 			fmt.Println("Service not available, Try to restart ssh service")
 			restartService()
 		} else {
-			conn.SetDeadline(time.Now().Add(time.Second * 3))
+			conn.SetDeadline(time.Now().Add(time.Second * 9))
 			fmt.Fprintf(conn, "GET /\r\n\r\n")
 			status, err := bufio.NewReader(conn).ReadString('\n')
 			fmt.Println(status)
