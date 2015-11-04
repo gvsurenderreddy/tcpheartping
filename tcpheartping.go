@@ -49,6 +49,6 @@ func restartService() {
 		fmt.Println(err)
 	}
 	time.Sleep(3 * time.Second) //Sleep 3 seconds for service restart
-	fmt.Printf("Finished: %q\n", out.String())
+	fmt.Println("Finished: \n", out.String())
 
 }
